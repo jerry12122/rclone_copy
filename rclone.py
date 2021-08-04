@@ -40,7 +40,7 @@ try:
             --checkers=16 \
             --bwlimit=40M \
             --dir-cache-time=60m \
-            --vfs-cache-mode full \
+            --vfs-cache-mode writes \
             --cache-info-age=60m "+gdrive_name+": "+mount_destination+" &"
         #print(shell)
         print(system_call(shell))
@@ -68,9 +68,8 @@ try:
             shell = "rclone copy "+gdrive_name+": --drive-root-folder-id "+id+" "+mount_destination+" -v"
         if "file" in url_split:
             shell = "rclone backend copyid "+gdrive_name+": "+id+" "+mount_destination+" -v"
-        print(shell)
-        
-        #print(system_call(shell))
+        #print(shell)
+        print(system_call(shell))
 except:
     print("Syntax error!!!!!!")
     print("python3 rclone.py copy url gdrive_name mount_destination")
