@@ -12,12 +12,13 @@ def system_call(command):
     return p.stdout.read()
 
 def print_help():
+    print("先掛載，再複製")
     print("mount:")
-    print("    python3 rclone.py mount gdrive_name mount_destination")
+    print("    python3 rclone.py mount gd名稱 掛載位置")
     print("    EX:")
     print("        python3 rclone.py mount t10 /mnt/t10")
     print("copy:")
-    print("    python3 rclone.py copy url gdrive_name mount_destination")
+    print("    python3 rclone.py copy 分享網址 gd名稱 掛載位置")
     print("    EX:")
     print("        python3 rclone.py copy https://drive.google.com/drive/folders/1XXXX t10 /mnt/t10/test")
 
@@ -45,16 +46,18 @@ try:
                 --dir-cache-time=60m \
                 --vfs-cache-mode writes \
                 --cache-info-age=60m "+gdrive_name+": "+mount_destination+" &"
-            #print(shell)
-            print(system_call(shell))
+            print(shell)
+            #print(system_call(shell))
     except:
         print("Syntax error!!!!!!")
-        print("python3 rclone.py mount gdrive_name mount_destination")
+        print("python3 rclone.py mount gd名稱 掛載位置")
     try:
         if arg1 == "copy":
             url = sys.argv[2]
             gdrive_name = sys.argv[3]
             mount_destination = sys.argv[4]
+            url = url.replace("?", "/")
+            url = url.replace("=", "/")
             url_split=url.split('/')
         
             if mount_destination[-1] != "/":
@@ -67,14 +70,14 @@ try:
                 if len(i) > 10 and i[0] == '1' :
                     id=i.split('?')[0]
         
-            if "folders" in url_split:
+            if "folders" in url_split or "folderview" in url_split:
                 shell = "rclone copy "+gdrive_name+": --drive-root-folder-id "+id+" "+mount_destination+" -v"
-            if "file" in url_split:
+            if "file" in url_split or "fileview" in url_split:
                 shell = "rclone backend copyid "+gdrive_name+": "+id+" "+mount_destination+" -v"
-            #print(shell)
-            print(system_call(shell))
+            print(shell)
+            #print(system_call(shell))
     except:
         print("Syntax error!!!!!!")
-        print("python3 rclone.py copy url gdrive_name mount_destination")
+        print("python3 rclone.py copy 分享網址 gd名稱 掛載位置")
 except:
     print_help()
